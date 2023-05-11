@@ -1,8 +1,22 @@
-﻿namespace web.models
+﻿using System;
+using System.Collections.Generic;
+
+// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
+// If you have enabled NRTs for your project, then un-comment the following line:
+// #nullable disable
+
+namespace web.Models
 {
-    public class eventt
+    public partial class Event
     {
-        public int id { get; set; }
-        public string nameevent { get; set; }
+        public Event()
+        {
+            Log = new HashSet<Log>();
+        }
+
+        public int Id { get; set; }
+        public string Nameevent { get; set; }
+
+        public virtual ICollection<Log> Log { get; set; }
     }
 }
