@@ -10,14 +10,14 @@ namespace web.Controllers
     [ApiController]
     public class userController : ControllerBase
     {
-        /*private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         public userController(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         static public SqlConnection myCon;
-        */
+        
         
         /*  
         [HttpGet]
@@ -46,7 +46,7 @@ namespace web.Controllers
         }
         */
 
-        public class usersContext : DbContext
+      /*  public class usersContext : DbContext
         {
             private string connectionString = "userDB";
 
@@ -64,6 +64,6 @@ namespace web.Controllers
             public DbSet<Users> users { get; set; }
             public DbSet<Log> log { get; set; }
             public DbSet<eventt> eventt { get; set; }
-        }
+        }*/
     }
 }
