@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "6i9Z23NQderh75Hf2ER8UjsWuqlodM/bN+McxsKa3kkyuQr8YOC8vwYQGScY2bPWz8HrMXRiCuQjORYoD9qVXg==",
+  "dgSpecHash": "/1fTgwGWtBH1EbFRPqtsQvovdaT/c+EJO0L6UARDEH04+aYYORvIAMHicRlbO3hZqT8TdTrWjZ20AVcsVv8NIw==",
   "success": true,
   "projectFilePath": "C:\\Users\\38098\\source\\repos\\web\\web\\web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\38098\\.nuget\\packages\\fluentassertions\\6.11.0\\fluentassertions.6.11.0.nupkg.sha512",
     "C:\\Users\\38098\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\38098\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",
+    "C:\\Users\\38098\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.32\\microsoft.aspnetcore.authentication.jwtbearer.3.1.32.nupkg.sha512",
     "C:\\Users\\38098\\.nuget\\packages\\microsoft.aspnetcore.authorization\\2.2.0\\microsoft.aspnetcore.authorization.2.2.0.nupkg.sha512",
     "C:\\Users\\38098\\.nuget\\packages\\microsoft.aspnetcore.authorization.policy\\2.2.0\\microsoft.aspnetcore.authorization.policy.2.2.0.nupkg.sha512",
     "C:\\Users\\38098\\.nuget\\packages\\microsoft.aspnetcore.hosting.abstractions\\2.2.0\\microsoft.aspnetcore.hosting.abstractions.2.2.0.nupkg.sha512",
