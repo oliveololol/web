@@ -12,8 +12,9 @@ namespace web.Models
         public int Id { get; set; }
         public int? IdUsers { get; set; }
         public int? IdEvent { get; set; }
+        public DateTime? Date { get; set; }
 
         public virtual Event IdEventNavigation { get; set; }
-        public virtual User IdUsersNavigation { get; set; }
+        public virtual Users IdUsersNavigation { get; set; }
     }
 }

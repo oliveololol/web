@@ -7,12 +7,11 @@ using System.Collections.Generic;
 
 namespace web.Models
 {
-    public partial class User
+    public partial class Users
     {
-        public User()
+        public Users()
         {
             Log = new HashSet<Log>();
-          
         }
 
         public int Id { get; set; }
@@ -22,7 +21,5 @@ namespace web.Models
         public string Surname { get; set; }
 
         public virtual ICollection<Log> Log { get; set; }
-       
-
     }
 }

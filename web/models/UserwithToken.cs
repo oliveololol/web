@@ -2,11 +2,11 @@
 
 namespace web.models
 {
-    public class UserWithToken : User
+    public class UserWithToken : Users
     {       
 
       public string Token { get; set; }
-        public UserWithToken (User user)
+        public UserWithToken (Users user)
         {
             this.Id = user.Id;
             this.Login = user.Login;
