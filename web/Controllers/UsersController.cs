@@ -4,6 +4,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -19,11 +20,13 @@ namespace web.Controllers
 {
     
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly userContext _context;
         private readonly JWTSettings _jwtsettings;
+       
 
         public UsersController(userContext context,IOptions<JWTSettings> jwtsettings)
         {
@@ -40,48 +43,71 @@ namespace web.Controllers
 
         
         //перевірка логіна пароля 
-        [HttpGet("Login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<UserWithToken>> Login ([FromBody]Users user)
         {
-            
+            string password = user.Parol;
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] hashedBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(user.Parol));
+                string hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+                user.Parol = hashedPassword;
+            }
+
             var u = await _context.Users.Where(u => u.Login == user.Login && u.Parol == user.Parol)
                 .FirstOrDefaultAsync();
-
-            UserWithToken userWithToken = new UserWithToken(u);
-
-            if (userWithToken == null)
+            try
             {
-                return NotFound();
-            }
-            Log log = new Log();
-            log.IdUsers = u.Id;
-            log.IdEvent = 1;
-            log.Date= DateTime.UtcNow;
-            
-
-            _context.Log.Add(log);
-           
-            _context.SaveChanges();
-
-            //token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtsettings.SecretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
+                if (u == null)
                 {
+                    return NotFound();
+                }
+
+                UserWithToken userWithToken = new UserWithToken(u);
+
+                Log log = new Log();
+                log.IdUsers = u.Id;
+                log.IdEvent = 1;
+                log.Date = DateTime.UtcNow;
+
+
+                _context.Log.Add(log);
+
+                _context.SaveChanges();
+
+                //token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_jwtsettings.SecretKey);
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     new Claim(ClaimTypes.Name, user.Login),
-                }),
-                Expires = DateTime.UtcNow.AddMonths(1),// час видалення токену 
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            userWithToken.Token = tokenHandler.WriteToken(token);
-      
-            return userWithToken;
+                    }),
+                    Expires = DateTime.UtcNow.AddMonths(1),// час видалення токену 
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                userWithToken.Token = tokenHandler.WriteToken(token);
+
+                return userWithToken;
+            }
+            catch
+            {
+                
+                    return NotFound();
+                
+            }
+        
         }
-       
+        [HttpGet("status")]
+        public bool status()
+        {
+            return true;
+        }
+
 
         // PUT: api/Users/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -130,17 +156,36 @@ namespace web.Controllers
         [HttpPut("resetpassword")]
         public async Task<ActionResult<Users>> ResetPassword(Users user)
         {
-            var users = _context.Users.Where(u => u.Login == user.Login).FirstOrDefault();
+            var users = _context.Users.Where(u => u.Id == user.Id).FirstOrDefault();
             if(users == null)
-            { NotFound(); }
+            { 
+               return NotFound();
+            }
+
             else {
                 users.Parol= user.Parol;
-                _context.SaveChanges();
+                if (users == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    // Хеширование пароля с использованием MD5
+                    using (MD5 md5 = MD5.Create())
+                    {
+                        byte[] hashedBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(user.Parol));
+                        string hashedPassword = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+
+                        users.Parol = hashedPassword;
+                    }
+                }
+
+
+                    _context.SaveChanges();
                 Log log = new Log();
                 log.IdUsers = users.Id;
                 log.IdEvent = 2;
                 log.Date = DateTime.UtcNow;
-
 
                 _context.Log.Add(log);
 

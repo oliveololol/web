@@ -28,11 +28,11 @@ namespace web.Controllers
         }
 
         // GET: api/Logs/5
-        [HttpGet("{id}")]
+        [HttpGet("id")]
         public async Task<ActionResult<Log>> GetLog(int id)
         {
             var log = await _context.Log.FindAsync(id);
-
+           
             if (log == null)
             {
                 return NotFound();
@@ -40,17 +40,13 @@ namespace web.Controllers
 
             return log;
         }
-        [HttpGet("/log")]
-        public async Task<ActionResult<Log>> Postresetpassword()
+        [HttpGet("log/{Id_Users}")]
+        public async Task<ActionResult<IEnumerable<Log>>> logs(int Id_Users )
         {
-            var log = new Log();
-
-            var Logs = await _context.Log.Include(l => log.Id).Where(l => log.IdUsers == 0).FirstOrDefaultAsync();
-            if (Logs == null)
-            {
-                return NotFound();
-            }
-
+            var Logs = await _context.Log.Include(l => l.IdEventNavigation)
+                .Where(l => l.IdUsers == Id_Users)
+                .ToListAsync();
+            
             return Logs;
         }
 
@@ -60,7 +56,7 @@ namespace web.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLog(int id, Log log)
         {
-            if (id != log.Id)
+            if (id != log.IdUsers)
             {
                 return BadRequest();
             }
@@ -95,7 +91,7 @@ namespace web.Controllers
             _context.Log.Add(log);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetLog", new { id = log.Id }, log);
+            return CreatedAtAction("GetLog", new { id = log.IdUsers }, log);
         }
 
         // DELETE: api/Logs/5
@@ -116,7 +112,7 @@ namespace web.Controllers
 
         private bool LogExists(int id)
         {
-            return _context.Log.Any(e => e.Id == id);
+            return _context.Log.Any(e => e.IdUsers == id);
         }
     }
 }
